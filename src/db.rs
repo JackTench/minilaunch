@@ -23,4 +23,22 @@ impl Database {
         self.conn.execute_batch(include_str!("sql/schema.sql")).unwrap();
     }
 
+    pub fn get_all_games(&self) -> Result<Vec<Game>> {
+        let mut statement = self.conn.prepare(include_str!("sql/get_all_games.sql"))?;
+        let rows = statement.query_map([], |row| {
+            Ok(Game {
+                id: row.get(0)?,
+                name: row.get(1)?,
+                platform: row.get(2)?,
+                launch_cmd: row.get(3)?,
+                play_count: row.get(4)?,
+            })
+        })?;
+        let mut results = Vec::new();
+        for row in rows {
+            results.push(row?);
+        }
+        Ok(results)
+    }
+
 }
