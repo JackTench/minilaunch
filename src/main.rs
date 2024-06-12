@@ -18,6 +18,12 @@ fn main() {
     let args = CliArgs::parse();
 
     if args.command == "run".to_string() {
-        println!("running {}", args.game)
+        let game_names = database.get_all_game_names().unwrap();
+        let game_string = args.game.to_string();
+        if game_names.iter().any(|e| game_string.contains(e)) {
+            println!("game is in db");
+        } else {
+            println!("game not in db");
+        }
     }
 }

@@ -41,6 +41,18 @@ impl Database {
         Ok(results)
     }
 
+    pub fn get_all_game_names(&self) -> Result<Vec<String>> {
+        let mut statement = self.conn.prepare(include_str!("sql/get_all_games.sql"))?;
+        let rows = statement.query_map([], |row| {
+            Ok(row.get(1)?)
+        })?;
+        let mut names = Vec::new();
+        for row in rows {
+            names.push(row?);
+        }
+        Ok(names)
+    }
+
     pub fn new_game(&self, name: &str, platform: &str, launch_cmd: &str) {
         self.conn.execute(include_str!("sql/new_game.sql"), params![name, platform, launch_cmd, 0]).unwrap();
     }
