@@ -34,23 +34,13 @@ impl Database {
                 play_count: row.get(4)?,
             })
         })?;
-        let mut results = Vec::new();
-        for row in rows {
-            results.push(row?);
-        }
-        Ok(results)
+        rows.collect()
     }
 
     pub fn get_all_game_names(&self) -> Result<Vec<String>> {
         let mut statement = self.conn.prepare(include_str!("sql/get_all_games.sql"))?;
-        let rows = statement.query_map([], |row| {
-            Ok(row.get(1)?)
-        })?;
-        let mut names = Vec::new();
-        for row in rows {
-            names.push(row?);
-        }
-        Ok(names)
+        let rows = statement.query_map([], |row| row.get(1))?;
+        rows.collect()
     }
 
     pub fn new_game(&self, name: &str, platform: &str, launch_cmd: &str) {
