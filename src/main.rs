@@ -27,7 +27,7 @@ fn main() {
             if let Some(game_string) = args.game {
                 match database.fuzzy_search_game(&game_string) {
                     Ok((game_name, game)) => {
-                        println!("Do you mean {}? (y/n)", game_name);
+                        print!("Do you mean {}? (y/n) ", game_name);
                         let mut input = String::new();
                         io::stdout().flush().unwrap();
                         io::stdin().read_line(&mut input).unwrap();
