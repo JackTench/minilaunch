@@ -9,7 +9,7 @@ use clap::Parser;
 #[command(version, about, long_about = None)]
 struct CliArgs {
     command: String,
-    game: String,
+    game: Option<String>,
 }
 
 fn main() {
@@ -22,21 +22,47 @@ fn main() {
 
     let args = CliArgs::parse();
 
-    if args.command == "run".to_string() {
-        let game_string = args.game.to_string();
-        match database.fuzzy_search_game(&game_string) {
-            Ok((game_name, game)) => {
-                println!("Do you mean {}? (y/n)", game_name);
-                let mut input = String::new();
-                io::stdout().flush().unwrap();
-                io::stdin().read_line(&mut input).unwrap();
-                if input.trim().to_lowercase() == "y" {
-                    println!("Launching game: {}", game.name);
-                } else {
-                    println!("Game not found.");
+    match args.command.as_str() {
+        "run" => {
+            if let Some(game_string) = args.game {
+                match database.fuzzy_search_game(&game_string) {
+                    Ok((game_name, game)) => {
+                        println!("Do you mean {}? (y/n)", game_name);
+                        let mut input = String::new();
+                        io::stdout().flush().unwrap();
+                        io::stdin().read_line(&mut input).unwrap();
+                        if input.trim().to_lowercase() == "y" {
+                            println!("Launching game: {}", game.name);
+                        } else {
+                            println!("Game not found");
+                        }
+                    }
+                    Err(err) => println!("{}", err),
                 }
+            } else {
+                println!("No game specified.");
             }
-            Err(err) => println!("{}", err),
+        }
+        "add" => {
+            if let Some(game_name) = args.game {
+                let platform = prompt("Platform: ");
+                let launch_cmd = prompt("Launch command: ");
+                database.new_game(&game_name, &platform, &launch_cmd);
+                println!("Game has been added.");
+            } else {
+                println!("No game name specified.");
+            }
+        }
+        _ => {
+            println!("Unknown command.");
         }
     }
+}
+
+fn prompt(message: &str) -> String {
+    let mut input = String::new();
+    print!("{}", message);
+    io::stdout().flush().unwrap();
+    io::stdin().read_line(&mut input).unwrap();
+    input.trim().to_string()
 }
