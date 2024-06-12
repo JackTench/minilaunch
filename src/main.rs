@@ -16,10 +16,6 @@ fn main() {
     let database = Database::new().unwrap();
     database.setup();
 
-    // Code for testing.
-    database.new_game("minecraft", "PC", "prismlauncher");
-    database.new_game("oot", "N64", "soh");
-
     let args = CliArgs::parse();
 
     match args.command.as_str() {
