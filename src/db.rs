@@ -42,10 +42,7 @@ impl Database {
     }
 
     pub fn new_game(&self, name: &str, platform: &str, launch_cmd: &str) {
-        let name_string: String = name.to_string();
-        let platform_string: String = platform.to_string();
-        let launch_cmd_string: String = launch_cmd.to_string();
-        self.conn.execute(include_str!("sql/new_game.sql"), params![name_string, platform_string, launch_cmd_string, 0]).unwrap();
+        self.conn.execute(include_str!("sql/new_game.sql"), params![name, platform, launch_cmd, 0]).unwrap();
     }
 
 }
