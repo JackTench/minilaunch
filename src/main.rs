@@ -23,14 +23,18 @@ fn main() {
             if let Some(game_string) = args.game {
                 match database.fuzzy_search_game(&game_string) {
                     Ok((game_name, game)) => {
-                        print!("Do you mean {}? (y/n) ", game_name);
-                        let mut input = String::new();
-                        io::stdout().flush().unwrap();
-                        io::stdin().read_line(&mut input).unwrap();
-                        if input.trim().to_lowercase() == "y" {
-                            println!("Launching game: {}", game.name);
+                        if game_name == game_string {
+                            println!("Launching Game: {}", game_name);
                         } else {
-                            println!("Game not found");
+                            print!("Did you mean {}? (y/n) ", game_name);
+                            let mut input = String::new();
+                            io::stdout().flush().unwrap();
+                            io::stdin().read_line(&mut input).unwrap();
+                            if input.trim().to_lowercase() == "y" {
+                                println!("Launching Game: {}", game.name);
+                            } else {
+                                println!("Game not found.");
+                            }
                         }
                     }
                     Err(err) => println!("{}", err),

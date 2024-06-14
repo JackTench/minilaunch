@@ -32,6 +32,21 @@ impl Database {
     }
 
     pub fn fuzzy_search_game(&self, query: &str) -> std::result::Result<(String, Game), String> {
+        // Check for exact match.
+        let mut statement = self.conn.prepare(include_str!("sql/get_game_by_name.sql")).map_err(|e| e.to_string())?;
+        if let Ok(game) = statement.query_row(params![query], |row| {
+            Ok(Game {
+                id: row.get(0)?,
+                name: row.get(1)?,
+                platform: row.get(2)?,
+                launch_cmd: row.get(3)?,
+                play_count: row.get(4)?,
+            })
+        }) {
+            return Ok((query.to_string(), game));
+        }
+
+        // Fuzzy find if exact match not found.
         let matcher = SkimMatcherV2::default();
         let game_names = self.get_all_game_names().map_err(|e| e.to_string())?;
         let mut best_match = None;
@@ -48,7 +63,7 @@ impl Database {
 
         match best_match {
             Some(best_match) => {
-                let mut statement = self.conn.prepare("SELECT * FROM games WHERE name = ?1").map_err(|e| e.to_string())?;
+                let mut statement = self.conn.prepare(include_str!("sql/get_game_by_name.sql")).map_err(|e| e.to_string())?;
                 let game = statement.query_row(params![best_match.clone()], |row| {
                     Ok(Game {
                         id: row.get(0)?,
