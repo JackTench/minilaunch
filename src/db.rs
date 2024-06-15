@@ -1,3 +1,4 @@
+use std::process::Command;
 use rusqlite::{Connection, Result, params};
 use fuzzy_matcher::skim::SkimMatcherV2;
 use fuzzy_matcher::FuzzyMatcher;
@@ -9,6 +10,7 @@ pub struct Game {
     pub launch_cmd: String,
     pub play_count: i32,
 }
+
 
 pub struct Database {
     conn: Connection,
@@ -81,6 +83,18 @@ impl Database {
 
     pub fn new_game(&self, name: &str, platform: &str, launch_cmd: &str) {
         self.conn.execute(include_str!("sql/new_game.sql"), params![name, platform, launch_cmd, 0]).unwrap();
+    }
+
+    pub fn launch(&self, game: &Game) -> Result<()> {
+        Command::new("sh")
+            .arg("-c")
+            .arg(&game.launch_cmd)
+            .spawn()
+            .expect("Failed to launch.");
+
+        self.conn.execute(include_str!("sql/increment_count.sql"), params![game.id])?;
+
+        Ok(())
     }
 
 }

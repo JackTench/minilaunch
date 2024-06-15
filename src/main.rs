@@ -24,6 +24,7 @@ fn main() {
                 match database.fuzzy_search_game(&game_string) {
                     Ok((game_name, game)) => {
                         if game_name == game_string {
+                            database.launch(&game).expect("Failed to launch.");
                             println!("Launching Game: {}", game_name);
                         } else {
                             print!("Did you mean {}? (y/n) ", game_name);
@@ -31,6 +32,7 @@ fn main() {
                             io::stdout().flush().unwrap();
                             io::stdin().read_line(&mut input).unwrap();
                             if input.trim().to_lowercase() == "y" {
+                                database.launch(&game).expect("Failed to launch");
                                 println!("Launching Game: {}", game.name);
                             } else {
                                 println!("Game not found.");
