@@ -25,7 +25,6 @@ fn main() {
                     Ok((game_name, game)) => {
                         if game_name == game_string {
                             database.launch(&game).expect("Failed to launch.");
-                            println!("Launching Game: {}", game_name);
                         } else {
                             print!("Did you mean {}? (y/n) ", game_name);
                             let mut input = String::new();
@@ -33,7 +32,6 @@ fn main() {
                             io::stdin().read_line(&mut input).unwrap();
                             if input.trim().to_lowercase() == "y" {
                                 database.launch(&game).expect("Failed to launch");
-                                println!("Launching Game: {}", game.name);
                             } else {
                                 println!("Game not found.");
                             }

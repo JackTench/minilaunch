@@ -11,7 +11,6 @@ pub struct Game {
     pub play_count: i32,
 }
 
-
 pub struct Database {
     conn: Connection,
 }
@@ -86,6 +85,8 @@ impl Database {
     }
 
     pub fn launch(&self, game: &Game) -> Result<()> {
+        println!("Launching Game: {}", game.name);
+
         Command::new("sh")
             .arg("-c")
             .arg(&game.launch_cmd)
