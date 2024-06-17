@@ -15,6 +15,7 @@ pub fn run_tui(database: &Database) -> io::Result<()> {
     let mut stdout = io::stdout();
     let backend = CrosstermBackend::new(&mut stdout);
     let mut terminal = Terminal::new(backend)?;
+    terminal.clear()?;
 
     loop {
         terminal.draw(|rect| {
