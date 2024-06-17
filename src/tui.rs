@@ -1,5 +1,6 @@
 use std::io;
 use crossterm::terminal::{enable_raw_mode, disable_raw_mode};
+use crossterm::event::{self, Event, KeyCode};
 use ratatui::backend::CrosstermBackend;
 use ratatui::Terminal;
 use ratatui::text::Span;
@@ -45,6 +46,17 @@ pub fn run_tui(database: &Database) -> io::Result<()> {
             rect.render_widget(block, chunks[0]);
             rect.render_widget(list, chunks[1]);
         })?;
+
+        if let Event::Key(key) = event::read()? {
+            match key.code {
+                KeyCode::Char('q') => {
+                    disable_raw_mode()?;
+                    terminal.clear()?;
+                    break;
+                }
+                _ => {}
+            }
+        }
     }
 
     Ok(())
