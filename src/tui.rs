@@ -1,5 +1,6 @@
 use std::io;
-use crossterm::terminal::{enable_raw_mode, disable_raw_mode};
+use crossterm::execute;
+use crossterm::terminal::{enable_raw_mode, disable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen};
 use crossterm::event::{self, Event, KeyCode};
 use ratatui::backend::CrosstermBackend;
 use ratatui::Terminal;
@@ -13,6 +14,7 @@ use crate::db::Database;
 pub fn run_tui(database: &Database) -> io::Result<()> {
     enable_raw_mode()?;
     let mut stdout = io::stdout();
+    execute!(stdout, EnterAlternateScreen)?;
     let backend = CrosstermBackend::new(&mut stdout);
     let mut terminal = Terminal::new(backend)?;
     terminal.clear()?;
@@ -80,10 +82,25 @@ pub fn run_tui(database: &Database) -> io::Result<()> {
                         list_state.select(Some(new_selected));
                     }
                 }
+                KeyCode::Enter => {
+                    if let Some(selected) = list_state.selected() {
+                        if let Some(game_name) = games.get(selected) {
+                            if let Ok((_, game)) = database.fuzzy_search_game(game_name) {
+                                database.launch(&game).expect("Failed to launch.");
+                                break;
+                            }
+                        }
+                    }
+                }
                 _ => {}
             }
         }
     }
+
+    disable_raw_mode()?;
+    execute!(io::stdout(), LeaveAlternateScreen)?;
+    terminal.show_cursor()?;
+    terminal.clear()?;
 
     Ok(())
 }
