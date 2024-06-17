@@ -1,6 +1,8 @@
 mod db;
+mod tui;
 
 use db::Database;
+use tui::run_tui;
 
 use std::io::{self, Write};
 use clap::Parser;
@@ -8,7 +10,7 @@ use clap::Parser;
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct CliArgs {
-    command: String,
+    command: Option<String>,
     game: Option<String>,
 }
 
@@ -18,8 +20,13 @@ fn main() {
 
     let args = CliArgs::parse();
 
-    match args.command.as_str() {
-        "run" => {
+    if args.command.is_none() {
+        run_tui(&database).expect("Failed to launch TUI.");
+        return;
+    }
+
+    match args.command.as_deref() {
+        Some("run") => {
             if let Some(game_string) = args.game {
                 match database.fuzzy_search_game(&game_string) {
                     Ok((game_name, game)) => {
@@ -43,7 +50,7 @@ fn main() {
                 println!("No game specified.");
             }
         }
-        "add" => {
+        Some("add") => {
             if let Some(game_name) = args.game {
                 let platform = prompt("Platform: ");
                 let launch_cmd = prompt("Launch command: ");
