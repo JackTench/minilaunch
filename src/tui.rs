@@ -60,7 +60,7 @@ pub fn run_tui(database: &Database) -> io::Result<()> {
                     terminal.clear()?;
                     break;
                 }
-                KeyCode::Up => {
+                KeyCode::Up | KeyCode::Char('k') => {
                     if let Some(selected) = list_state.selected() {
                         let new_selected = if selected > 0 {
                             selected - 1
@@ -70,7 +70,7 @@ pub fn run_tui(database: &Database) -> io::Result<()> {
                         list_state.select(Some(new_selected));
                     }
                 }
-                KeyCode::Down => {
+                KeyCode::Down | KeyCode::Char('j') => {
                     if let Some(selected) = list_state.selected() {
                         let new_selected = if selected < games.len() - 1 {
                             selected + 1
