@@ -1,5 +1,6 @@
 mod db;
 mod tui;
+mod steam;
 
 use db::Database;
 use tui::run_tui;
