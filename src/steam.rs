@@ -5,7 +5,9 @@ use dotenv::dotenv;
 use reqwest::blocking::Client;
 use serde_json::Value;
 
-pub fn import_steam_games(steam_id: &str) -> Result<(), Box<dyn Error>> {
+use crate::db::Database;
+
+pub fn import_steam_games(steam_id: &str, database: &Database) -> Result<(), Box<dyn Error>> {
     // Load Steam API key environment variable.
     dotenv().ok();
     let api_key = env::var("STEAM_API_KEY").expect("Could not find Steam API key environment variable.");
@@ -19,11 +21,18 @@ pub fn import_steam_games(steam_id: &str) -> Result<(), Box<dyn Error>> {
 
     let response = client.get(&query_url).send()?.text()?;
     let json: Value = serde_json::from_str(&response)?;
-
+    
+    // Parse JSON.
     if let Some(games) = json.pointer("/response/games").and_then(|v| v.as_array()) {
         for game in games {
             let appid = game.get("appid").and_then(|v| v.as_i64()).unwrap_or(-1) as i32;
             let name = game.get("name").and_then(|v| v.as_str()).unwrap_or("Unknown Game").to_string();
+
+            // Construct launch command.
+            let launch_cmd = format!("steam -applaunch {}", appid);
+
+            // Add to db.
+            database.new_game(&name, "Steam", &launch_cmd);
         }
     }
 
