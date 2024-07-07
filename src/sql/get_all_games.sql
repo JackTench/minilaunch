@@ -1,1 +1,1 @@
-SELECT * FROM games ORDER BY name ASC;
+SELECT * FROM games ORDER BY LOWER(name);
