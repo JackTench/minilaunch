@@ -713,6 +713,7 @@ dependencies = [
  "ratatui",
  "reqwest",
  "rusqlite",
+ "serde_json",
 ]
 
 [[package]]
