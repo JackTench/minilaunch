@@ -4,6 +4,7 @@ mod steam;
 
 use db::Database;
 use tui::run_tui;
+use steam::import_steam_games;
 
 use std::io::{self, Write};
 use clap::Parser;
@@ -60,6 +61,11 @@ fn main() {
             } else {
                 println!("No game name specified.");
             }
+        }
+        Some("steam") => {
+            let id = prompt("Steam ID:");
+            let _ = import_steam_games(&id, &database);
+            println!("Steam library has been imported.");
         }
         _ => {
             println!("Unknown command.");
