@@ -69,7 +69,7 @@ impl CliArgs {
     }
 }
 
-pub fn inline_prompt_str(message: &str) -> String {
+fn inline_prompt_str(message: &str) -> String {
     let mut input = String::new();
     print!("{}", message);
     io::stdout().flush().unwrap();
@@ -77,7 +77,7 @@ pub fn inline_prompt_str(message: &str) -> String {
     input.trim().to_string()
 }
 
-pub fn yn_prompt_bool(message: &str) -> bool {
+fn yn_prompt_bool(message: &str) -> bool {
     // Format prompt message.
     let mut prompt_message = String::new();
     prompt_message.push_str(message);
