@@ -4,12 +4,10 @@ mod tui;
 mod steam;
 
 use cli::CliArgs;
-use cli::inline_prompt_str;
+use cli::{inline_prompt_str, yn_prompt_bool};
 use db::Database;
 use tui::run_tui;
 use steam::import_steam_games;
-
-use std::io::{self, Write};
 
 fn main() {
     let database = Database::new().unwrap();
@@ -30,11 +28,7 @@ fn main() {
                         if game_name == game_string {
                             database.launch(&game).expect("Failed to launch.");
                         } else {
-                            print!("Did you mean {}? (y/n) ", game_name);
-                            let mut input = String::new();
-                            io::stdout().flush().unwrap();
-                            io::stdin().read_line(&mut input).unwrap();
-                            if input.trim().to_lowercase() == "y" {
+                            if yn_prompt_bool(format!("Did you mean {}?", game_name).as_str()) {
                                 database.launch(&game).expect("Failed to launch");
                             } else {
                                 println!("Game not found.");
