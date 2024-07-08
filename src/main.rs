@@ -4,6 +4,7 @@ mod tui;
 mod steam;
 
 use cli::CliArgs;
+use cli::inline_prompt_str;
 use db::Database;
 use tui::run_tui;
 use steam::import_steam_games;
@@ -48,8 +49,8 @@ fn main() {
         }
         Some("add") => {
             if let Some(game_name) = args.game {
-                let platform = prompt("Platform: ");
-                let launch_cmd = prompt("Launch command: ");
+                let platform = inline_prompt_str("Platform: ");
+                let launch_cmd = inline_prompt_str("Launch command: ");
                 database.new_game(&game_name, &platform, &launch_cmd);
                 println!("Game has been added.");
             } else {
@@ -57,7 +58,7 @@ fn main() {
             }
         }
         Some("steam") => {
-            let id = prompt("Steam ID:");
+            let id = inline_prompt_str("Steam ID:");
             let _ = import_steam_games(&id, &database);
             println!("Steam library has been imported.");
         }
@@ -65,12 +66,4 @@ fn main() {
             println!("Unknown command.");
         }
     }
-}
-
-fn prompt(message: &str) -> String {
-    let mut input = String::new();
-    print!("{}", message);
-    io::stdout().flush().unwrap();
-    io::stdin().read_line(&mut input).unwrap();
-    input.trim().to_string()
 }
