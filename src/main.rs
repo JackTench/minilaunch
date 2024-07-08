@@ -1,26 +1,20 @@
+mod cli;
 mod db;
 mod tui;
 mod steam;
 
+use cli::CliArgs;
 use db::Database;
 use tui::run_tui;
 use steam::import_steam_games;
 
 use std::io::{self, Write};
-use clap::Parser;
-
-#[derive(Parser, Debug)]
-#[command(version, about, long_about = None)]
-struct CliArgs {
-    command: Option<String>,
-    game: Option<String>,
-}
 
 fn main() {
     let database = Database::new().unwrap();
     database.setup();
 
-    let args = CliArgs::parse();
+    let args = CliArgs::parse_args();
 
     if args.command.is_none() {
         run_tui(&database).expect("Failed to launch TUI.");
