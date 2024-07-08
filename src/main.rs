@@ -4,60 +4,12 @@ mod tui;
 mod steam;
 
 use cli::CliArgs;
-use cli::{inline_prompt_str, yn_prompt_bool};
 use db::Database;
-use tui::run_tui;
-use steam::import_steam_games;
 
 fn main() {
     let database = Database::new().unwrap();
     database.setup();
 
     let args = CliArgs::parse_args();
-
-    if args.command.is_none() {
-        run_tui(&database).expect("Failed to launch TUI.");
-        return;
-    }
-
-    match args.command.as_deref() {
-        Some("run") => {
-            if let Some(game_string) = args.game {
-                match database.fuzzy_search_game(&game_string) {
-                    Ok((game_name, game)) => {
-                        if game_name == game_string {
-                            database.launch(&game).expect("Failed to launch.");
-                        } else {
-                            if yn_prompt_bool(format!("Did you mean {}?", game_name).as_str()) {
-                                database.launch(&game).expect("Failed to launch");
-                            } else {
-                                println!("Game not found.");
-                            }
-                        }
-                    }
-                    Err(err) => println!("{}", err),
-                }
-            } else {
-                println!("No game specified.");
-            }
-        }
-        Some("add") => {
-            if let Some(game_name) = args.game {
-                let platform = inline_prompt_str("Platform: ");
-                let launch_cmd = inline_prompt_str("Launch command: ");
-                database.new_game(&game_name, &platform, &launch_cmd);
-                println!("Game has been added.");
-            } else {
-                println!("No game name specified.");
-            }
-        }
-        Some("steam") => {
-            let id = inline_prompt_str("Steam ID:");
-            let _ = import_steam_games(&id, &database);
-            println!("Steam library has been imported.");
-        }
-        _ => {
-            println!("Unknown command.");
-        }
-    }
+    args.handle_command(&database);
 }
