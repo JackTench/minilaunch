@@ -1,13 +1,36 @@
 use std::io;
+
 use crossterm::execute;
-use crossterm::terminal::{enable_raw_mode, disable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen};
-use crossterm::event::{self, Event, KeyCode};
-use ratatui::backend::CrosstermBackend;
+use crossterm::terminal::{
+    enable_raw_mode,
+    disable_raw_mode,
+    EnterAlternateScreen,
+    LeaveAlternateScreen,
+};
+use crossterm::event::{
+    self,
+    Event,
+    KeyCode,
+};
 use ratatui::Terminal;
+use ratatui::backend::CrosstermBackend;
 use ratatui::text::Span;
-use ratatui::style::{Style, Color};
-use ratatui::widgets::{Block, Borders, List, ListItem, ListState};
-use ratatui::layout::{Layout, Constraint, Direction};
+use ratatui::style::{
+    Style,
+    Color,
+};
+use ratatui::widgets::{
+    Block,
+    Borders,
+    List,
+    ListItem,
+    ListState,
+};
+use ratatui::layout::{
+    Layout,
+    Constraint,
+    Direction,
+};
 
 use crate::db::Database;
 

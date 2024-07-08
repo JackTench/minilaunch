@@ -1,5 +1,10 @@
 use std::process::Command;
-use rusqlite::{Connection, Result, params};
+
+use rusqlite::{
+    Connection,
+    Result,
+    params,
+};
 use fuzzy_matcher::skim::SkimMatcherV2;
 use fuzzy_matcher::FuzzyMatcher;
 
