@@ -3,6 +3,8 @@ use std::error::Error;
 use reqwest::blocking::Client;
 use serde_json::Value;
 
+use crate::db;
+
 pub fn import_steam_games(steam_api_key: &str, steam_id: &str) -> Result<(), Box<dyn Error>> {
     // Download JSON of steam games for given SteamID.
     let client = Client::new();
@@ -17,9 +19,11 @@ pub fn import_steam_games(steam_api_key: &str, steam_id: &str) -> Result<(), Box
     let json: Value = serde_json::from_str(&response).unwrap();
     if let Some(games) = json.pointer("/response/games").and_then(|v| v.as_array()) {
         for game in games {
-            let name = game.get("name").unwrap();
-            let steam_app_id = game.get("appid").unwrap().to_string();
-            println!("{} {}", name, steam_app_id);
+            let name = game.get("name").and_then(|v| v.as_str()).unwrap_or("Unknown Game").to_string();
+            let steam_app_id = game.get("appid").and_then(|v| v.as_i64()).unwrap_or(-1);
+
+            // Add games to database.
+            db::add_game(name, steam_app_id);
         }
     }
 
