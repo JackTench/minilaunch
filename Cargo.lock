@@ -606,6 +606,7 @@ dependencies = [
  "inquire",
  "reqwest",
  "rusqlite",
+ "serde_json",
 ]
 
 [[package]]
