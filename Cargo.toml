@@ -12,3 +12,4 @@ serde_json = "1.0.128"
 
 crossterm = "0.28.1"
 inquire = "0.7.5"
+indicatif = "0.17.8"
