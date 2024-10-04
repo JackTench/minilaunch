@@ -1,3 +1,5 @@
+use std::process::exit;
+
 use inquire::{
     Select,
     InquireError
@@ -19,6 +21,10 @@ pub fn main_menu() {
     match ans {
         Ok(choice) => {
             match choice {
+                "Quit" => {
+                    utils::clear_screen();
+                    exit(0);
+                }
                 _ => eprintln!("Invalid choice!"),
             }
         }
