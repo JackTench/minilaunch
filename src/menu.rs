@@ -7,6 +7,7 @@ use inquire::{
     InquireError
 };
 
+use crate::db;
 use crate::steamapi;
 use crate::utils;
 
@@ -24,6 +25,7 @@ pub fn main_menu() {
     match ans {
         Ok(choice) => {
             match choice {
+                "Library" => library_menu(),
                 "Import Steam Games" => import_steam_games_menu(),
                 "Quit" => {
                     utils::clear_screen();
@@ -35,6 +37,18 @@ pub fn main_menu() {
         Err(InquireError::OperationCanceled) => println!("Operation was canceled by the user."),
         Err(e) => eprintln!("Error: {}", e),
     }
+}
+
+fn library_menu() {
+    utils::clear_screen();
+
+    // Get games from db.
+    let games = db::get_games();
+    let game_names: Vec<String> = games.into_iter()
+        .map(|game| game.name)
+        .collect();
+
+    let ans = Select::new("Games", game_names).prompt();
 }
 
 fn import_steam_games_menu() {
