@@ -3,7 +3,7 @@ mod menu;
 mod utils;
 
 fn main() {
-    let _db = db::Database::new();
+    let data = db::Database::new().unwrap();
 
     utils::clear_screen();
     menu::main_menu();
