@@ -48,7 +48,9 @@ fn library_menu() {
         .map(|game| game.name)
         .collect();
 
-    let ans = Select::new("Games", game_names).prompt();
+    let ans = Select::new("Games", game_names)
+        .with_page_size(32)
+        .prompt();
 }
 
 fn import_steam_games_menu() {
