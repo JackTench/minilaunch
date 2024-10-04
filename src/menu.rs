@@ -1,6 +1,7 @@
 use std::process::exit;
 
 use inquire::{
+    Confirm,
     Select,
     Text,
     InquireError
@@ -44,4 +45,19 @@ fn import_steam_games_menu() {
     let steam_id = Text::new("Enter SteamID:").prompt().unwrap();
 
     steamapi::import_steam_games(&steam_api_key, &steam_id).unwrap();
+
+    // Prompt for returning to main menu.
+    let ret = Confirm::new("Would you like to return to the main menu?")
+        .with_default(true)
+        .with_help_message("If no, minilaunch will close.")
+        .prompt();
+
+    match ret {
+        Ok(true) => main_menu(),
+        Ok(false) => {
+            utils::clear_screen();
+            exit(0);
+        }
+        Err(e) => eprintln!("Error: {}", e),
+    }
 }
