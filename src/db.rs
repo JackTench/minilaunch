@@ -14,3 +14,9 @@ impl Database {
         Ok(Database { conn })
     }
 }
+
+pub struct Game {
+    pub id: i64,
+    pub name: String,
+    pub steamappid: i64
+}
