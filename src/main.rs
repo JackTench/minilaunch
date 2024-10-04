@@ -1,5 +1,6 @@
 mod db;
 mod menu;
+mod steam;
 mod steamapi;
 mod utils;
 

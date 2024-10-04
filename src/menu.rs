@@ -8,6 +8,7 @@ use inquire::{
 };
 
 use crate::db;
+use crate::steam;
 use crate::steamapi;
 use crate::utils;
 
@@ -44,13 +45,20 @@ fn library_menu() {
 
     // Get games from db.
     let games = db::get_games();
-    let game_names: Vec<String> = games.into_iter()
-        .map(|game| game.name)
+    let game_names: Vec<String> = games.iter()
+        .map(|game| game.name.clone())
         .collect();
 
     let ans = Select::new("Games", game_names)
         .with_page_size(32)
-        .prompt();
+        .prompt()
+        .expect("Failed to select a game.");
+
+    let selected_game = games.iter()
+        .find(|game| game.name == ans)
+        .expect("Selected game not found in the database.");
+
+    steam::launch(&selected_game);
 }
 
 fn import_steam_games_menu() {
