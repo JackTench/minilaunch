@@ -1,0 +1,1 @@
+SELECT * FROM games ORDER BY LOWER(name);
