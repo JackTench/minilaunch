@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS games (
 	id INTEGER PRIMARY KEY,
 	name TEXT NOT NULL,
-	steamappid INTEGER NOT NULL
+	steamappid INTEGER NOT NULL,
+	CONSTRAINT unique_game UNIQUE (steamappid)
 );
