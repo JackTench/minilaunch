@@ -6,12 +6,12 @@ use std::process::{
 use crate::db::Game;
 
 pub fn launch(game: &Game) {
+    let launch_url = format!("steam://run/{}", game.steamappid);
+
     #[cfg(target_os = "windows")]
     {
-        let launch_cmd = format!("start steam -applaunch {}", game.steamappid);
         Command::new("cmd")
-            .arg("/C")
-            .arg(launch_cmd)
+            .args(&["/C", "start", &launch_url])
             .stdout(Stdio::null())
             .stderr(Stdio::null())
             .spawn()
@@ -20,10 +20,8 @@ pub fn launch(game: &Game) {
 
     #[cfg(target_os  = "linux")]
     {
-        let launch_cmd = format!("steam -applaunch {} &", game.steamappid);
-        Command::new("sh")
-            .arg("-c")
-            .arg(launch_cmd)
+        Command::new("xdg-open")
+            .arg(&launch_url)
             .stdout(Stdio::null())
             .stderr(Stdio::null())
             .spawn()
