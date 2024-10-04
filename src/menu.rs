@@ -42,7 +42,9 @@ fn import_steam_games_menu() {
 
     // Prompt for API key and SteamID.
     let steam_api_key = Text::new("Enter Steam API key:").prompt().unwrap();
-    let steam_id = Text::new("Enter SteamID:").prompt().unwrap();
+    let steam_id = Text::new("Enter SteamID:")
+        .with_help_message("In numeric form, sometimes called SteamID64.")
+        .prompt().unwrap();
 
     steamapi::import_steam_games(&steam_api_key, &steam_id).unwrap();
 
