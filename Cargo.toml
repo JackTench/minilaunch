@@ -9,3 +9,4 @@ edition = "2021"
 rusqlite = {version = "0.32.1", features = ["bundled"]}
 
 crossterm = "0.28.1"
+inquire = "0.7.5"
