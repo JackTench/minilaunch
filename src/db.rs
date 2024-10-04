@@ -4,8 +4,8 @@ use rusqlite::{
 };
 
 pub struct Game {
-    name: String,
-    steamappid: i64
+    pub name: String,
+    pub steamappid: i64
 }
 
 pub fn setup_database() {
@@ -30,8 +30,8 @@ pub fn get_games() -> Vec<Game> {
     // Fetch rows.
     let games_iter = statement.query_map(params![], |row| {
         Ok(Game {
-            name: row.get(0)?,
-            steamappid: row.get(1)?,
+            name: row.get(1)?,
+            steamappid: row.get(2)?,
         })
     }).unwrap();
 
