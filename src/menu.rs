@@ -6,6 +6,7 @@ use inquire::{
     InquireError
 };
 
+use crate::steamapi;
 use crate::utils;
 
 pub fn main_menu() {
@@ -39,6 +40,8 @@ fn import_steam_games_menu() {
     utils::clear_screen();
 
     // Prompt for API key and SteamID.
-    let steam_api_key = Text::new("Enter Steam API key:").prompt();
-    let steam_id = Text::new("Enter SteamID:").prompt();
+    let steam_api_key = Text::new("Enter Steam API key:").prompt().unwrap();
+    let steam_id = Text::new("Enter SteamID:").prompt().unwrap();
+
+    steamapi::import_steam_games(&steam_api_key, &steam_id).unwrap();
 }

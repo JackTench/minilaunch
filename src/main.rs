@@ -1,5 +1,6 @@
 mod db;
 mod menu;
+mod steamapi;
 mod utils;
 
 fn main() {
