@@ -4,7 +4,8 @@ use crossterm::{
     execute,
     terminal::{
         Clear,
-        ClearType
+        ClearType,
+        size
     },
     cursor::MoveTo
 };
@@ -15,4 +16,9 @@ pub fn clear_screen() {
         Clear(ClearType::All),
         MoveTo(0, 0)
     ).unwrap();
+}
+
+pub fn get_terminal_height() -> u16 {
+    let (_, height) = size().unwrap();
+    height
 }
