@@ -50,7 +50,7 @@ fn library_menu() {
         .collect();
 
     let ans = Select::new("Games", game_names)
-        .with_page_size(32)
+        .with_page_size((utils::get_terminal_height() - 2) as usize)
         .prompt()
         .expect("Failed to select a game.");
 
