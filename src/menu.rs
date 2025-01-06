@@ -49,6 +49,12 @@ fn library_menu() {
         .map(|game| game.name.clone())
         .collect();
 
+    // Don't crash if there's no games in the database.
+    if game_names.len() == 0 {
+        println!("There are no games in the database!");
+        exit(0);
+    }
+
     let ans = Select::new("Games", game_names)
         .with_page_size((utils::get_terminal_height() - 2) as usize)
         .prompt()
