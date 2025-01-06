@@ -7,6 +7,11 @@ use rusqlite::{
 };
 use dirs::data_local_dir;
 
+pub struct Platform {
+    pub name: String,
+    pub launch_prefix: String,
+}
+
 pub struct Game {
     pub name: String,
     pub steamappid: i64
