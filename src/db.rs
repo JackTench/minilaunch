@@ -14,7 +14,8 @@ pub struct Platform {
 
 pub struct Game {
     pub name: String,
-    pub steamappid: i64
+    pub platform: Platform,
+    pub launch_postfix: String,
 }
 
 fn database_file() -> PathBuf {
