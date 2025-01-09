@@ -5,6 +5,9 @@ CREATE TABLE IF NOT EXISTS platforms (
 	CONSTRAINT unique_platform UNIQUE (launch_prefix)
 );
 
+-- Also create a default Steam platform in the platforms table.
+INSERT OR IGNORE INTO platforms (name, launch_prefix) VALUES ("Steam", "steam://run/");
+
 CREATE TABLE IF NOT EXISTS games (
 	id INTEGER PRIMARY KEY,
 	name TEXT NOT NULL,
